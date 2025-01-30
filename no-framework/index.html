@@ -3,9 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>No Framework Project</title>
+    <title>Component Sidebar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+        .header {
+            width: 100%;
+            background-color: #6fbf8e; /* More blue-green */
+            padding: 4px; /* Thinner */
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header .title {
+            margin: 0;
+            font-size: 24px;
+            color: white;
+        }
+        .header .menu {
+            display: flex;
+            align-items: center;
+        }
+        .header .menu-item {
+            margin-right: 40px; /* Increased space between items */
+            color: white;
+            cursor: pointer;
+        }
+        .header .menu-item.docs {
+            color: white;
+            position: relative;
+        }
+        .header .menu-item.docs .docs-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .header .menu-item.docs .docs-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .header .menu-item.docs .docs-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .header .menu-item.docs:hover .docs-dropdown-content {
+            display: block;
+        }
+        .header .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .header .buttons {
+            display: flex;
+            align-items: center;
+            margin-left: auto; /* Move to the far right */
+        }
+        .header .buttons .button {
+            margin-left: 10px;
+        }
+        .sidebar {
+            width: 25%;
+            position: fixed;
+            top: 48px; /* Adjusted for header height */
+            left: 0;
+            height: calc(100% - 48px); /* Adjusted for header height */
+            background-color: #f5f5f5;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .content-container {
+            margin-left: 25%;
+            margin-right: 25%;
+            padding: 20px;
+            margin-top: 48px; /* Adjusted for header height */
+        }
+        .right-sidebar {
+            width: 25%;
+            position: fixed;
+            top: 48px; /* Adjusted for header height */
+            right: 0;
+            height: calc(100% - 48px); /* Adjusted for header height */
+            background-color: #f5f5f5;
+            padding: 20px;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+        }
+        .text-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .text-box .divider {
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .button-group .button {
+            flex: 1;
+            border-radius: 0;
+            border: none;
+            background-color: #f5f5f5;
+            padding: 5px;
+            text-align: center;
+            border-right: 1px solid #ccc;
+        }
+        .button-group .button:last-child {
+            border-right: none;
+        }
+        .divider {
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        .task-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0;
+            border: 1px solid #ccc;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+        .task-section div {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .task-section .active {
+            background-color: #b2f2bb; /* Light minty green */
+        }
+        .task-list {
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 10px;
+        }
+        .task-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .task-list li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .task-list input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .github-box {
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        .github-header {
+            background-color: #b2f2bb; /* Darker mint green */
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .github-content {
+            background-color: #e6f7e6; /* Lighter mint green */
+            padding: 20px;
+        }
+        .github-content a {
+            text-decoration: underline;
+            color: inherit;
+        }
+        .progress {
+            height: 20px;
+            background-color: #b2f2bb; /* Darker mint green */
+            width: 60%;
+            border: 1px solid #ccc;
+        }
+        .right-sidebar h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+        }
+        .right-sidebar p {
+            font-size: 16px;
+            color: black;
+        }
+        .right-sidebar h3 {
+            font-size: 18px;
+            color: grey;
+        }
+        .right-sidebar ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        .right-sidebar ul li {
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .right-sidebar ul li:hover {
+            background-color: #e6f7e6;
+        }
+        .right-sidebar .vertical-line {
+            border-left: 1px solid grey;
+            margin-left: 10px;
+            padding-left: 10px;
+        }
+        .right-sidebar .selected {
+            background-color: #007bff; /* Darker blue */
+            color: white;
+            padding-left: 10px;
+        }
+        .form-buttons {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 20px;
+        }
+        .form-buttons .button {
+            margin-right: 10px;
+        }
+        .form-buttons .button.is-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .form-buttons .button.is-light {
+            background-color: #f5f5f5;
+            color: black;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to No Framework Project</h1>
+    <div class="header">
+        <div class="menu">
+            <h1 class="title"><a href="https://bulma.io/" style="color: white; text-decoration: none;">Bulma</a></h1>
+            <span class="menu-item"><a href="https://bulma.io/" style="color: white; text-decoration: none;">Home</a></span>
+            <div class="menu-item docs">
+                <span>Docs</span>
+                <div class="docs-dropdown-content">
+                    <a href="https://bulma.io/documentation/overview/start/">Overview</a>
+                    <a href="https://bulma.io/documentation/overview/modifiers/">Modifiers</a>
+                    <a href="https://bulma.io/documentation/columns/basics/">Columns</a>
+                    <a href="https://bulma.io/documentation/layout/container/">Layout</a>
+                    <a href="https://bulma.io/documentation/form/general/">Form</a>
+                    <a href="https://bulma.io/documentation/elements/box/">Elements</a>
+                    <a href="https://bulma.io/documentation/components/breadcrumb/">Components</a>
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <a href="https://x.com/intent/post?text=Bulma%3A%20a%20modern%20CSS%20framework%20based%20on%20Flexbox&hashtags=bulmaio&url=https%3A%2F%2Fbulma.io&via=jgthms" class="button is-info">Tweet</a>
+            <a href="https://bulma.io/documentation/overview/start/" class="button is-primary">Download</a>
+        </div>
+        <div class="menu-icon">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+    <div class="sidebar">
+        <div class="text-box">
+            <h2 class="title is-4">Component <span class="icon is-small"><i class="fas fa-angle-down"></i></span></h2>
+            <div class="divider"></div>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. @bulmaio. #css #responsive<br>11:09 PM - 1 Jan 2016</p>
+            <div class="divider"></div>
+            <div class="button-group">
+                <button class="button">Save</button>
+                <button class="button">Edit</button>
+                <button class="button">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="content-container">
+        <div class="task-section">
+            <div class="active">Current</div>
+            <div>Completed</div>
+            <div>Upcoming</div>
+            <div>All</div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <input class="input" type="text" placeholder="Enter new task">
+            </div>
+        </div>
+        <ul class="task-list">
+            <li><input type="checkbox">Make Bulma great again</li>
+            <li><input type="checkbox">Add some more features</li>
+            <li><input type="checkbox">Make a github account</li>
+            <li><input type="checkbox">Learn how to use github</li>
+            <li><input type="checkbox">add a .gitignore file</li>
+        </ul>
+        <div class="github-box">
+            <div class="github-header">
+                <span>Make a github account</span>
+                <span class="icon is-small"><i class="fas fa-times-circle"></i></span>
+            </div>
+            <div class="github-content">
+                <p>Go to <a href="https://github.com" target="_blank">github.com</a> and create an account.</p>
+                <p>That's where you'll be able to share your work with the world.. that's where we will be putting all of our code for this class.</p>
+                <div class="progress"></div>
+            </div>
+        </div>
+        <form>
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="aaaaa">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="bulmaaaaa">
+                </div>
+                <p class="help is-success">This username is available</p>
+            </div>
+            <div class="field">
+                <label class="label">Email</label>
+                <div class="control">
+                    <input class="input" type="email" placeholder="hello@">
+                </div>
+                <p class="help is-danger">This email is invalid</p>
+            </div>
+            <div class="field">
+                <label class="label">Subject</label>
+                <div class="control">
+                    <div class="select">
+                        <select>
+                            <option>Select dropdown</option>
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Message</label>
+                <div class="control">
+                    <textarea class="textarea" placeholder="Textarea"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                        I agree to the terms and conditions
+                    </label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="answer">
+                        Yes
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="answer">
+                        No
+                    </label>
+                </div>
+            </div>
+            <div class="form-buttons">
+                <button class="button is-light">Cancel</button>
+                <button class="button is-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+    <div class="right-sidebar">
+        <h2>Table of Contents</h2>
+        <p>Intra-page navigation</p>
+        <h3>General</h3>
+        <ul>
+            <li>Dashboard</li>
+            <li>Customers</li>
+        </ul>
+        <h3>Administration</h3>
+        <ul>
+            <li>Team Settings</li>
+            <ul class="vertical-line">
+                <li class="selected" style="padding-left: 0;">Manage Your Team</li>
+                <li>Members</li>
+                <li>Plugins</li>
+                <li>Add a member</li>
+            </ul>
+            <li>Invitations</li>
+            <li>Cloud Storage Environment Settings</li>
+            <li>Authentication</li>
+        </ul>
+        <h3>Transactions</h3>
+        <ul>
+            <li>Payments</li>
+            <li>Transfers</li>
+            <li>Balance</li>
+        </ul>
+    </div>
 </body>
 </html>
