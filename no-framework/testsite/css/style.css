@@ -1,0 +1,71 @@
+/* General styles */
+body {
+    background-color: lightgreen;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header styles */
+header {
+    background-color: darkgreen;
+    color: white;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    position: relative;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+nav ul li:hover {
+    background-color: #49da49; /* Darker green for highlight */
+}
+
+nav ul li ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    color: black;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    z-index: 1;
+}
+
+nav ul li:hover ul {
+    display: block;
+}
+
+nav ul li ul li {
+    padding: 10px;
+    white-space: nowrap;
+}
+
+nav ul li ul li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Main content styles */
+main {
+    padding: 20px;
+}
+
+.instructions {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
